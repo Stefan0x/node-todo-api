@@ -1,17 +1,32 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken'); //https://jwt.io/
+const bcrypt = require('bcryptjs');
 
-var data = {
-  id: 33
-};
+var password = "1234567";
 
-var token = jwt.sign(data, 'I looove Pizza');
-console.log(token);
+// bcrypt.genSalt(10, (err, salt) => {
+//   bcrypt.hash(password, salt, (err, hash) => {
+//     console.log(hash);
+//   });
+// })
 
-var decoded = jwt.verify(token, 'I looove Pizza');
-console.log(decoded);
+var hashedPassword = '$2a$10$nSLnMUV1ZPiGz.NKJgEpY.gNnRBgtZHZ4LQ2tR6NOBCKXQJ/MmjOm';
 
+bcrypt.compare(password, hashedPassword, (err, res) => {
+  console.log(res);
+});
 
+/// ********
+
+// var data = {
+//   id: 33
+// };
+//
+// var token = jwt.sign(data, 'I looove Pizza');
+// console.log(token);
+//
+// var decoded = jwt.verify(token, 'I looove Pizza');
+// console.log(decoded);
 
 /// ******** Nachfolgend der ähnliche Code ohne jwt Modul in langer form *** ///
 
