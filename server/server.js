@@ -5,6 +5,7 @@ const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
+const bcrypt = require('bcryptjs');
 
 // Local Imports
 var {mongoose} = require('./db/mongoose');
@@ -127,10 +128,22 @@ app.post('/users', (req, res) => {
   });
 });
 
-// 1st Private route
+// Private route
 app.get('/users/me', authenticate, (req, res) => {
   // Wird durch Middleware geprüft (authenticate)
   res.send(req.user);
+});
+
+app.post('/users/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+
+  User.findByCredentials(body.email, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(user);
+    });
+  }).catch((e) => {
+    res.status(400).send();
+  });
 });
 
 app.listen(port, () => {
